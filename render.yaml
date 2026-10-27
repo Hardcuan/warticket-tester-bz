@@ -1,0 +1,44 @@
+databases:
+  - name: warticket-db
+    plan: free
+    databaseName: warticket
+    user: warticket
+    region: singapore
+
+services:
+  - type: web
+    name: warticket-tester-bz
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: WARTICKET TESTER
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://warticket-tester-bz.onrender.com
+      - key: APP_TIMEZONE
+        value: Asia/Jakarta
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: warticket-db
+          property: connectionString
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: MIDTRANS_IS_PRODUCTION
+        value: "false"
